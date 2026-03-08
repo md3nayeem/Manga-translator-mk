@@ -1,5 +1,5 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, ThinkingLevel } from "@google/genai";
 import { TranslationResult } from "../types";
 
 const NATURAL_BANGLA_PROMPT = `
@@ -45,7 +45,8 @@ Task:
 
 export async function processMangaPage(base64Image: string, retryCount = 0): Promise<TranslationResult> {
   const MAX_RETRIES = 2;
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
+  const ai = new GoogleGenAI({ apiKey });
 
   try {
     const response = await ai.models.generateContent({
@@ -64,7 +65,7 @@ export async function processMangaPage(base64Image: string, retryCount = 0): Pro
       config: {
         systemInstruction: SYSTEM_INSTRUCTION + "\n\n" + NATURAL_BANGLA_PROMPT,
         responseMimeType: "application/json",
-        thinkingConfig: { thinkingBudget: 2000 },
+        thinkingConfig: { thinkingLevel: ThinkingLevel.HIGH },
         responseSchema: {
           type: Type.OBJECT,
           properties: {
