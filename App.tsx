@@ -29,7 +29,7 @@ const App: React.FC = () => {
     if (!image) return;
     setLoading(true);
     try {
-      const hasKey = (window.aistudio && await window.aistudio.hasSelectedApiKey()) || process.env.API_KEY || process.env.GEMINI_API_KEY;
+      const hasKey = (window.aistudio && await window.aistudio.hasSelectedApiKey()) || process.env.API_KEY;
       if (!hasKey) {
         if (window.aistudio) {
           await window.aistudio.openSelectKey();
